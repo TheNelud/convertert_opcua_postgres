@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config>
+    <database>
+    <!-- Подключение к базе данных журнала -->
+        <db_name>journal_nadim</db_name>
+        <db_user>postgres</db_user>
+        <db_password>postgres</db_password>
+        <db_host>127.0.0.1</db_host>
+        <db_port>5432</db_port>
+
+    <!-- Таблица для считывания тегов для OPC и записи в базу данных-->
+        <tb_name>app_info.test_table</tb_name>
+        <tb_column_tag>tag_name</tb_column_tag>
+        <tb_column_id_tag>hfrpok</tb_column_id_tag>
+
+        <tb_isert_id_tag>hfrpok_id</tb_isert_id_tag>
+        <tb_isert_value>val</tb_isert_value>
+        <tb_isert_timestamp>timestamp</tb_isert_timestamp>
+
+    <!-- Таблица для считывания и записи на OPC -->
+        <data_to_alpha>public.data_to_alpha</data_to_alpha>
+        <alpha_column_tag>tag_name</alpha_column_tag>
+        <alpha_column_value>value</alpha_column_value>
+
+    </database>
+
+    <!-- Подключение к OPC серверу  -->
+    <opcserver_master>
+        <opc_host>opc.tcp://127.0.0.1:5555</opc_host>
+    </opcserver_master>
+
+    <opcserver_slave>
+        <opc_host>opc.tcp://127.0.0.1:4050</opc_host>
+    </opcserver_slave>
+
+    <!-- Настроки времени записи в базу данных -->
+    <rate_5_min>
+        <!-- <cl_table>app_info.table</cl_table> -->
+        <cl_table>app_info."5min_params"</cl_table>
+        <cl_rate>5</cl_rate>
+    </rate_5_min>
+
+<!-- Каждый час в :00 минут -->
+    <rate_1_hour>
+        <cl_table>app_info.hour_params</cl_table>
+        <cl_rate>:00</cl_rate>
+    </rate_1_hour>
+<!-- Каждый день в 10:00:00 -->
+    <rate_1_day>
+        <cl_table>app_info.sut_params</cl_table>
+        <cl_rate>10:00:00</cl_rate>
+    </rate_1_day>
+    
+    <ather_setting>
+        <!--  -->
+        <cl_value_volumn>val</cl_value_volumn>
+        <cl_column_tag>hfrpok_id</cl_column_tag>
+        <rate_data_to_alpha>5</rate_data_to_alpha>
+
+        <time_zone>Europe/Moscow</time_zone>
+        <!-- Место хранение логов -->
+        <path_log_file>J:\job\opcua_postgres\opcua_35\info.log</path_log_file>
+    </ather_setting>
+</config>
