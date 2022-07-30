@@ -4,6 +4,9 @@ from parse_config import ParserXML
 
 class LogginMyApp():
     def __init__(self) -> None:
+        self.logger = None
+        self.stream_handler = None
+        self.file_handler = None
         self.pXML = ParserXML().parser()
         self._log_format = "%(asctime)s - [%(levelname)s] - %(name)s - (%(filename)s).%(funcName)s(%(lineno)d) - %(message)s"
 
