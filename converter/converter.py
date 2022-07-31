@@ -14,6 +14,7 @@ class OpcUAClient():
 
         self.listValue = {}
         self.counter = 0
+        self.myTime = int(time.strftime("%M"))
 
     # Подлючение клиентом OPC UA к серверу
     def connectClient(self):
@@ -54,7 +55,14 @@ class OpcUAClient():
 
     def main(self):
         # настройка по расписанию postgres -> opc -> postgres
-        schedule.every(5).minutes.at(':00').do(OpcUAClient().processPostrgres, client=OpcUAClient().connectClient(),toWhichTable=ParserXML().parser()['rate_5_min']['cl_table'])
+
+        while True:
+            if self.myTime % 5 == 0 or self.myTime == 0:
+                schedule.every(5).minutes.at(':00').do(OpcUAClient().processPostrgres, client=OpcUAClient().connectClient(),toWhichTable=ParserXML().parser()['rate_5_min']['cl_table'])
+                break
+            else:
+                self.myTime = int(time.strftime("%M"))
+
         schedule.every().hour.at(':00').do(OpcUAClient().processPostrgres, client=OpcUAClient().connectClient(),toWhichTable=ParserXML().parser()['rate_1_hour']['cl_table'])
         schedule.every().day.at("10:00:00").do(OpcUAClient().processPostrgres, client=OpcUAClient().connectClient(),toWhichTable=ParserXML().parser()['rate_1_day']['cl_table'])
 
