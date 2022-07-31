@@ -13,7 +13,9 @@ setup.py
 ./converter/__pycache__/parse_config.cpython-35.pyc
 ./converter/__pycache__/postgres.cpython-35.pyc
 converter/__init__.py
+converter/config.xml
 converter/converter.py
+converter/info.log
 converter/logger_info.py
 converter/parse_config.py
 converter/postgres.py
@@ -21,3 +23,6 @@ converter.egg-info/PKG-INFO
 converter.egg-info/SOURCES.txt
 converter.egg-info/dependency_links.txt
 converter.egg-info/top_level.txt
+converter/__pycache__/logger_info.cpython-35.pyc
+converter/__pycache__/parse_config.cpython-35.pyc
+converter/__pycache__/postgres.cpython-35.pyc
