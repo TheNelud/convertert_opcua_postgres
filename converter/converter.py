@@ -31,9 +31,13 @@ class OpcUAClient():
                 self.logger.warning("Connect slave server: " + self.pXML['opcserver_master']['opc_host'])
                 return self.client
         except ConnectionRefusedError:
-            self.logger.warning("No connection to server OPC")
-            OpcUAClient().connectClient()
+
             time.sleep(60)
+            if self.myTime == 0:
+                self.logger.warning("No connection to server OPC")
+
+            OpcUAClient().connectClient()
+
 
     # Берет названия тегов из базы, ищет на сервере OPC считывая их значение и отправляет обратно в базу
     def processPostrgres(self, client, toWhichTable):
