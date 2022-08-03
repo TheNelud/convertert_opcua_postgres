@@ -1,3 +1,4 @@
+from http import client
 from opcua import Client
 from parse_config import ParserXML
 from logger_info import LogginMyApp
@@ -19,15 +20,20 @@ class OpcUAClient():
     # Подлючение клиентом OPC UA к серверу
     def connectClient(self):
         try:
-            self.client = Client(self.pXML['opcserver_master']['opc_host'])
-            self.client.connect()
-            self.logger.info("Connect master server: " + self.pXML['opcserver_master']['opc_host'])
-            return self.client
-        except Exception:
-            self.client = Client(self.pXML['opcserver_slave']['opc_host'])
-            self.client.connect()
-            self.logger.warning("Connect slave server: " + self.pXML['opcserver_master']['opc_host'])
-            return self.client
+            try:
+                self.client = Client(self.pXML['opcserver_master']['opc_host'])
+                self.client.connect()
+                self.logger.info("Connect master server: " + self.pXML['opcserver_master']['opc_host'])
+                return self.client
+            except Exception:
+                self.client = Client(self.pXML['opcserver_slave']['opc_host'])
+                self.client.connect()
+                self.logger.warning("Connect slave server: " + self.pXML['opcserver_master']['opc_host'])
+                return self.client
+        except ConnectionRefusedError:
+            self.logger.warning("No connection to server OPC")
+            OpcUAClient().connectClient()
+            time.sleep(60)
 
     # Берет названия тегов из базы, ищет на сервере OPC считывая их значение и отправляет обратно в базу
     def processPostrgres(self, client, toWhichTable):
