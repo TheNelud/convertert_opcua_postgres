@@ -1,4 +1,4 @@
-from http import client
+
 from opcua import Client
 from parse_config import ParserXML
 from logger_info import LogginMyApp
@@ -6,16 +6,35 @@ from postgres import Postgres
 import schedule, time
 
 
-class OpcUAClient():
+
+class OpcUAClient:
     def __init__(self):
         self.pXML = ParserXML().parser()
         self.logger = LogginMyApp().get_logger(__name__)
         self.selectTags = Postgres().selectTags()
+
         # self.selectTagsAlpha = Postgres().selectDataAlpha()
 
         self.listValue = {}
         self.counter = 0
         self.myTime = int(time.strftime("%M"))
+
+    def get_ua_type(self, value):
+        if value.__class__.__name__ == 'int':
+            return int(value)
+        elif value.__class__.__name__ == 'float':
+            return float(value)
+        elif value.__class__.__name__ == 'bool':
+            if value == "True":
+                return 1
+            else:
+                return 0
+        elif value.__class__.__name__ == 'str':
+            return str(value)
+        elif value.__class__.__name__ == 'double':
+            return float(value)
+        else:
+            return None
 
     # Подлючение клиентом OPC UA к серверу
     def connectClient(self):
@@ -43,8 +62,10 @@ class OpcUAClient():
     def processPostrgres(self, client, toWhichTable):
         for self.tagsElement in self.selectTags:  # ['GD06.UF01UD01.KS01.GCA.CTGA_AVO1.Socket_PLC.Value', '232']
             self.node = client.get_node('ns=1;s=' + str(self.tagsElement[0]))
+            # print(self.node)
             try:
-                self.listValue[self.tagsElement[1]] = self.node.get_value()
+                self.listValue[self.tagsElement[1]] = self.get_ua_type(self.node.get_value())
+                # print(self.listValue)
             except Exception as e:
                 self.listValue[self.tagsElement[1]] = 0
                 self.counter += 1

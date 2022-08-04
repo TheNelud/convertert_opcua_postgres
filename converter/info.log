@@ -34,3 +34,18 @@ Connect master server: opc.tcp://127.0.0.1:4050
 2022-08-03 13:16:24,970 - [WARNING] - __main__ - (converter.py).connectClient(39) - No connection to server OPC
 2022-08-03 13:16:24,970 - [WARNING] - __main__ - (converter.py).connectClient(39) - No connection to server OPC
 2022-08-03 13:16:24,970 - [WARNING] - __main__ - (converter.py).connectClient(39) - No connection to server OPC
+2022-08-03 16:21:37,883 - [WARNING] - __main__ - (converter.py).processPostrgres(53) - Пустые значения
+2022-08-03 16:21:37,883 - [WARNING] - __main__ - (converter.py).processPostrgres(53) - Пустые значения
+2022-08-04 09:54:23,957 - [WARNING] - __main__ - (converter.py).processPostrgres(54) - Пустые значения
+2022-08-04 09:54:23,957 - [WARNING] - __main__ - (converter.py).processPostrgres(54) - Пустые значения
+2022-08-04 10:33:52,450 - [WARNING] - __main__ - (converter.py).processPostrgres(54) - Пустые значения
+2022-08-04 10:33:52,450 - [WARNING] - __main__ - (converter.py).processPostrgres(54) - Пустые значения
+2022-08-04 11:10:13,540 - [WARNING] - __main__ - (converter.py).processPostrgres(73) - Пустые значения
+2022-08-04 11:10:13,540 - [WARNING] - __main__ - (converter.py).processPostrgres(73) - Пустые значения
+2022-08-04 11:20:00,769 - [WARNING] - __main__ - (converter.py).processPostrgres(73) - Пустые значения
+2022-08-04 11:20:00,769 - [WARNING] - __main__ - (converter.py).processPostrgres(73) - Пустые значения
+2022-08-04 11:20:00,769 - [WARNING] - __main__ - (converter.py).processPostrgres(73) - Пустые значения
+2022-08-04 11:20:00,769 - [WARNING] - __main__ - (converter.py).processPostrgres(73) - Пустые значения
+2022-08-04 11:20:00,769 - [WARNING] - __main__ - (converter.py).processPostrgres(73) - Пустые значения
+2022-08-04 11:20:00,769 - [WARNING] - __main__ - (converter.py).processPostrgres(73) - Пустые значения
+2022-08-04 11:20:00,769 - [WARNING] - __main__ - (converter.py).processPostrgres(73) - Пустые значения
