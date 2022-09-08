@@ -114,7 +114,7 @@ class OpcUAClient:
 
 if __name__ == '__main__':
 
-    OpcUAClient().processPostrgres(OpcUAClient().connectClient(), ParserXML().parser()['rate_5_min']['cl_table'])
-    OpcUAClient().processPostrgres(OpcUAClient().connectClient(), ParserXML().parser()['rate_1_hour']['cl_table'])
-    OpcUAClient().processPostrgres(OpcUAClient().connectClient(), ParserXML().parser()['rate_1_day']['cl_table'])
-    # OpcUAClient().main()
+    # OpcUAClient().processPostrgres(OpcUAClient().connectClient(), ParserXML().parser()['rate_5_min']['cl_table'])
+    # OpcUAClient().processPostrgres(OpcUAClient().connectClient(), ParserXML().parser()['rate_1_hour']['cl_table'])
+    # OpcUAClient().processPostrgres(OpcUAClient().connectClient(), ParserXML().parser()['rate_1_day']['cl_table'])
+    OpcUAClient().main()
