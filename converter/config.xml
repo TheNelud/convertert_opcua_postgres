@@ -5,8 +5,8 @@
     <!-- Подключение к базе данных журнала -->
         <db_name>journal_nadim</db_name>
         <db_user>postgres</db_user>
-        <db_password>Potok-DU</db_password>
-        <db_host>172.16.205.51</db_host>
+        <db_password>postgres</db_password>
+        <db_host>127.0.0.1</db_host>
         <db_port>5432</db_port>
 
     <!-- Таблица для считывания тегов для OPC и записи в базу данных-->

@@ -13,11 +13,14 @@ class Postgres():
     # Создаем подключение к базе
     def connection(self):
         try:
-            return psycopg2.connect(database=self.pXML['database']['db_name'],
+            self.connect = psycopg2.connect(database=self.pXML['database']['db_name'],
                                     user=self.pXML['database']['db_user'],
                                     password=self.pXML["database"]['db_password'],
                                     host=self.pXML["database"]['db_host'],
                                     port=self.pXML["database"]['db_port'])
+            self.logger.info("Подключено к базе данных ")
+            return self.connect
+
 
         except psycopg2.OperationalError as e:
             self.logger.info("Подключение к базе данных прошло c ошибкой: " + str(e))
@@ -26,10 +29,13 @@ class Postgres():
     # Запрос на вывод всех тегов из базы данных для сравнения с сервером OPC
     def selectTags(self):
         self.sqlSelect = 'SELECT ' + str(self.pXML['database']['tb_column_tag']) + ", " + str(self.pXML['database']['tb_column_id_tag']) + ' FROM ' + str(self.pXML['database']['tb_name']) + ' WHERE ' + str(self.pXML['database']['tb_column_tag']) + ' IS NOT NULL'
-        self.cursor = self.connection().cursor()
-        self.logger.info("Подключено к базе данных ")
+        self.connection = self.connection()
+        self.cursor = self.connection.cursor()
+        # self.logger.info("Подключено к базе данных ")
         self.cursor.execute(self.sqlSelect)
-        return [self.i for self.i in self.cursor.fetchall()]
+        _selectTags = [self.i for self.i in self.cursor.fetchall()]
+        # self.connection().close()
+        return _selectTags
 
     # Запрос записи в базу, тегов с их значениями
     def insertTagsValues(self, listValue, toWhichTable):
@@ -44,6 +50,7 @@ class Postgres():
             self.cursor = self.connection.cursor()
             self.cursor.execute(self.sqlInsert)
             self.connection.commit()
+        self.connection.close()
 
     # TODO:Запись на сервер АЛьфа
     # def selectDataAlpha(self):

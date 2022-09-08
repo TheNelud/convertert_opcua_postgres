@@ -65,7 +65,7 @@ class OpcUAClient:
             # print(self.node)
             try:
                 self.listValue[self.tagsElement[1]] = self.get_ua_type(self.node.get_value())
-                # print(self.listValue)
+                print(str(self.node) + " : " + str(self.node.get_value()))
             except Exception as e:
                 self.listValue[self.tagsElement[1]] = 0
                 self.counter += 1
@@ -74,6 +74,8 @@ class OpcUAClient:
         self.logger.info("Данные собраны с сервера opc")
         Postgres().insertTagsValues(self.listValue, toWhichTable)
         self.logger.info("Данные отправлены в базу")
+
+
 
     # def processAlpha(self, client):
     #     # TODO: Отправление из базы данных на сервер Alpha
@@ -89,13 +91,21 @@ class OpcUAClient:
 
         while True:
             if self.myTime % 5 == 0 or self.myTime == 0:
-                schedule.every(5).minutes.at(':00').do(OpcUAClient().processPostrgres, client=OpcUAClient().connectClient(),toWhichTable=ParserXML().parser()['rate_5_min']['cl_table'])
+                OpcUAClient().processPostrgres(OpcUAClient().connectClient(),
+                                               ParserXML().parser()['rate_5_min']['cl_table'])
+                schedule.every(5).minutes.at(':00').do(OpcUAClient().processPostrgres,
+                                                       client=OpcUAClient().connectClient(),
+                                                       toWhichTable=ParserXML().parser()['rate_5_min']['cl_table'])
                 break
             else:
                 self.myTime = int(time.strftime("%M"))
 
-        schedule.every().hour.at(':00').do(OpcUAClient().processPostrgres, client=OpcUAClient().connectClient(),toWhichTable=ParserXML().parser()['rate_1_hour']['cl_table'])
-        schedule.every().day.at("10:00:00").do(OpcUAClient().processPostrgres, client=OpcUAClient().connectClient(),toWhichTable=ParserXML().parser()['rate_1_day']['cl_table'])
+        schedule.every().hour.at(':00').do(OpcUAClient().processPostrgres,
+                                           client=OpcUAClient().connectClient(),
+                                           toWhichTable=ParserXML().parser()['rate_1_hour']['cl_table'])
+        schedule.every().day.at("10:00:00").do(OpcUAClient().processPostrgres,
+                                               client=OpcUAClient().connectClient(),
+                                               toWhichTable=ParserXML().parser()['rate_1_day']['cl_table'])
 
         while True:
             schedule.run_pending()
@@ -104,5 +114,7 @@ class OpcUAClient:
 
 if __name__ == '__main__':
 
-    # OpcUAClient().processPostrgres(OpcUAClient().connectClient(), ParserXML().parser()['rate_5_min']['cl_table'])
-    OpcUAClient().main()
+    OpcUAClient().processPostrgres(OpcUAClient().connectClient(), ParserXML().parser()['rate_5_min']['cl_table'])
+    OpcUAClient().processPostrgres(OpcUAClient().connectClient(), ParserXML().parser()['rate_1_hour']['cl_table'])
+    OpcUAClient().processPostrgres(OpcUAClient().connectClient(), ParserXML().parser()['rate_1_day']['cl_table'])
+    # OpcUAClient().main()
