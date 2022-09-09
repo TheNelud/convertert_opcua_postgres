@@ -31,10 +31,9 @@ class Postgres():
         self.sqlSelect = 'SELECT ' + str(self.pXML['database']['tb_column_tag']) + ", " + str(self.pXML['database']['tb_column_id_tag']) + ' FROM ' + str(self.pXML['database']['tb_name']) + ' WHERE ' + str(self.pXML['database']['tb_column_tag']) + ' IS NOT NULL'
         self.connection = self.connection()
         self.cursor = self.connection.cursor()
-        # self.logger.info("Подключено к базе данных ")
         self.cursor.execute(self.sqlSelect)
         _selectTags = [self.i for self.i in self.cursor.fetchall()]
-        # self.connection().close()
+        self.connection.close()
         return _selectTags
 
     # Запрос записи в базу, тегов с их значениями
