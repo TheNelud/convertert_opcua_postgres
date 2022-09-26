@@ -58,25 +58,25 @@ class OpcUAClient:
 
     # Берет названия тегов из базы, ищет на сервере OPC считывая их значение и отправляет обратно в базу
     def processPostrgres(self, client, toWhichTable):
-        try:
-            for self.tagsElement in Postgres().selectTags():  # ['GD06.UF01UD01.KS01.GCA.CTGA_AVO1.Socket_PLC.Value', '232']
-                self.node = client.get_node('ns=1;s=' + str(self.tagsElement[0]))
-                # print(self.node)
-                try:
-                    self.listValue[self.tagsElement[1]] = self.get_ua_type(self.node.get_value())
-                    print(str(self.node) + " : " + str(self.node.get_value()))
-                except Exception as e:
-                    self.listValue[self.tagsElement[1]] = 0
-                    self.counter += 1
-            if self.counter > 0:
-                self.logger.warning("Пустые значения")
-            self.logger.info("Данные собраны с сервера opc")
-            Postgres().insertTagsValues(self.listValue, toWhichTable)
-            self.logger.info("Данные отправлены в базу")
-        except ConnectionRefusedError:
-            self.logger.warning('Нет связи с сервером OPC')
-            Postgres().insertIfNotConnectOpc(toWhichTable)
-            self.logger.info("Данные записанны с нулевыми значениями")
+        # try:
+        for self.tagsElement in Postgres().selectTags():  # ['GD06.UF01UD01.KS01.GCA.CTGA_AVO1.Socket_PLC.Value', '232']
+            self.node = client.get_node('ns=1;s=' + str(self.tagsElement[0]))
+            # print(self.node)
+            try:
+                self.listValue[self.tagsElement[1]] = self.get_ua_type(self.node.get_value())
+                print(str(self.node) + " : " + str(self.node.get_value()))
+            except Exception as e:
+                self.listValue[self.tagsElement[1]] = 0
+                self.counter += 1
+        if self.counter > 0:
+            self.logger.warning("Пустые значения")
+        self.logger.info("Данные собраны с сервера opc")
+        Postgres().insertTagsValues(self.listValue, toWhichTable)
+        self.logger.info("Данные отправлены в базу")
+        # except ConnectionRefusedError:
+        #     self.logger.warning('Нет связи с сервером OPC')
+        #     Postgres().insertIfNotConnectOpc(toWhichTable)
+        #     self.logger.info("Данные записанны с нулевыми значениями")
 
 
     def everyFiveMinutes(self):
