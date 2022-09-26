@@ -49,3 +49,6 @@ Connect master server: opc.tcp://127.0.0.1:4050
 2022-08-04 11:20:00,769 - [WARNING] - __main__ - (converter.py).processPostrgres(73) - Пустые значения
 2022-08-04 11:20:00,769 - [WARNING] - __main__ - (converter.py).processPostrgres(73) - Пустые значения
 2022-08-04 11:20:00,769 - [WARNING] - __main__ - (converter.py).processPostrgres(73) - Пустые значения
+2022-09-26 16:01:04,134 - [WARNING] - __main__ - (converter.py).connectClient(54) - No connection to server OPC
+2022-09-26 16:01:04,134 - [WARNING] - __main__ - (converter.py).connectClient(54) - No connection to server OPC
+2022-09-26 16:01:04,134 - [WARNING] - __main__ - (converter.py).connectClient(54) - No connection to server OPC

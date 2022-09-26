@@ -12,9 +12,6 @@ class OpcUAClient:
     def __init__(self):
         self.pXML = ParserXML().parser()
         self.logger = LogginMyApp().get_logger(__name__)
-        # self.selectTags = Postgres().selectTags()
-
-        # self.selectTagsAlpha = Postgres().selectDataAlpha()
 
         self.listValue = {}
         self.counter = 0
@@ -61,30 +58,26 @@ class OpcUAClient:
 
     # Берет названия тегов из базы, ищет на сервере OPC считывая их значение и отправляет обратно в базу
     def processPostrgres(self, client, toWhichTable):
-        for self.tagsElement in Postgres().selectTags():  # ['GD06.UF01UD01.KS01.GCA.CTGA_AVO1.Socket_PLC.Value', '232']
-            self.node = client.get_node('ns=1;s=' + str(self.tagsElement[0]))
-            # print(self.node)
-            try:
-                self.listValue[self.tagsElement[1]] = self.get_ua_type(self.node.get_value())
-                print(str(self.node) + " : " + str(self.node.get_value()))
-            except Exception as e:
-                self.listValue[self.tagsElement[1]] = 0
-                self.counter += 1
-        if self.counter > 0:
-            self.logger.warning("Пустые значения")
-        self.logger.info("Данные собраны с сервера opc")
-        Postgres().insertTagsValues(self.listValue, toWhichTable)
-        self.logger.info("Данные отправлены в базу")
+        try:
+            for self.tagsElement in Postgres().selectTags():  # ['GD06.UF01UD01.KS01.GCA.CTGA_AVO1.Socket_PLC.Value', '232']
+                self.node = client.get_node('ns=1;s=' + str(self.tagsElement[0]))
+                # print(self.node)
+                try:
+                    self.listValue[self.tagsElement[1]] = self.get_ua_type(self.node.get_value())
+                    print(str(self.node) + " : " + str(self.node.get_value()))
+                except Exception as e:
+                    self.listValue[self.tagsElement[1]] = 0
+                    self.counter += 1
+            if self.counter > 0:
+                self.logger.warning("Пустые значения")
+            self.logger.info("Данные собраны с сервера opc")
+            Postgres().insertTagsValues(self.listValue, toWhichTable)
+            self.logger.info("Данные отправлены в базу")
+        except ConnectionRefusedError:
+            self.logger.warning('Нет связи с сервером OPC')
+            Postgres().insertIfNotConnectOpc(toWhichTable)
+            self.logger.info("Данные записанны с нулевыми значениями")
 
-
-
-    # def processAlpha(self, client):
-    #     # TODO: Отправление из базы данных на сервер Alpha
-    #     for self.tagsElementAplha in self.selectTagsAlpha:
-    #         self.node = client.get_node('ns=1;s=' + str(self.tagsElementAplha[0]))
-    #         self.node.set_value(self.tagsElementAplha[1])
-    #         self.node.get_data_value()
-    #     client.close_session()
 
     def everyFiveMinutes(self):
         OpcUAClient().processPostrgres(OpcUAClient().connectClient(), ParserXML().parser()['rate_5_min']['cl_table'])
@@ -118,5 +111,5 @@ class OpcUAClient:
 
 
 if __name__ == '__main__':
-    print("Version - 2.1 09092022 - 940")
+    print("Version - 2.2 260922 ")
     OpcUAClient().main()

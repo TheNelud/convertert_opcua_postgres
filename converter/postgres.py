@@ -51,13 +51,22 @@ class Postgres():
             self.connection.commit()
         self.connection.close()
 
-    # TODO:Запись на сервер АЛьфа
-    # def selectDataAlpha(self):
-    #     self.sqlSelectAlpha = ''
-    #     self.cursor = self.connection().cursor()
-    #     self.cursor.execute(self.sqlSelectAlpha)
-    #     return [self.i for self.i in self.cursor.fetchall()]
+    def insertIfNotConnectOpc(self, toWhichTable):
+        self.connection = self.connection()
+        selectTags = Postgres().selectTags()
+        for tag in selectTags:
+            tempstamp = datetime.now()
+            sqlInsert = "INSERT INTO " + str(toWhichTable) + " (" + str(
+                self.pXML['database']['tb_isert_id_tag']) + ", " + str(
+                self.pXML['database']['tb_isert_value']) + ", " + str(
+                self.pXML['database']['tb_isert_timestamp']) + ") VALUES (\'" + str(tag[1]) + "\', \'" + str(
+                0) + "\', '" + str(tempstamp) + "\')"
+            self.cursor = self.connection.cursor()
+            self.cursor.execute(sqlInsert)
+            self.connection.commit()
+        self.connection.close()
+
 
 # if __name__ == "__main__":
-#     print(Postgres().selectTags())
+#     Postgres().insertIfNotConnectOpc(ParserXML().parser()['rate_5_min']['cl_table'])
     # Postgres().insert()
