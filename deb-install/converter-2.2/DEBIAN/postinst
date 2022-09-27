@@ -1,0 +1,28 @@
+echo "Распаковка закончена"
+chmod 777 /usr/bin/converter-2.2
+
+cd /usr/bin/converter-2.2/deb-pip
+
+sudo dpkg -i ca-certificates_20200601~deb10u2_all.deb
+sudo dpkg -i python-pip-whl_18.1-5_all.deb
+sudo dpkg -i python3-distutils_3.6.5-3_all.deb
+sudo dpkg -i python3-pip_18.1-5_all.deb
+
+cd /usr/bin/converter-2.2/lib
+
+pip3 install psycopg2_binary-2.8.6-cp35-cp35m-manylinux1_x86_64.whl
+pip3 install schedule-0.6.0-py2.py3-none-any.whl
+pip3 install six-1.16.0-py2.py3-none-any.whl
+pip3 install lxml-4.9.1-cp35-cp35m-manylinux_2_5_x86_64.manylinux1_x86_64.whl
+pip3 install opcua-0.98.13-py3-none-any.whl
+
+cd /usr/bin/converter-2.2
+
+sudo cp converter-2.2.service /etc/systemd/system/
+
+sudo systemctl daemon-reload
+sudo systemctl enable converter-2.2.service
+sudo systemctl start converter-2.2.service
+sudo systemctl status converter-2.2.service
+
+echo "Установка завершена"

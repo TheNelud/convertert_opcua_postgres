@@ -1,0 +1,6 @@
+Package: converter
+Version: 2.2
+Architecture: all
+Maintainer: Developers TheNelud
+Original-Maintainer: TheNelud
+Description: Converter opc -> postgres

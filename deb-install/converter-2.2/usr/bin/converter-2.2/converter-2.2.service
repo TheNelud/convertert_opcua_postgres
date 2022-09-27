@@ -1,0 +1,13 @@
+[Unit]
+Description=Convector OPCUA -> postgrest.
+After=multi-user.target
+
+[Service]
+User=potok
+Group=potok
+Type=simple
+Restart=always
+ExecStart=/usr/bin/python3 /usr/bin/converter-2.2/converter/converter.py
+
+[Install]
+WantedBy=multi-user.target
