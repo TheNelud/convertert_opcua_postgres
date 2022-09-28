@@ -1,11 +1,10 @@
-
+from datetime import datetime
 from opcua import Client
 from parse_config import ParserXML
 from logger_info import LogginMyApp
 from postgres import Postgres
 import schedule, time
 from threading import Timer
-
 
 
 class OpcUAClient:
@@ -35,7 +34,7 @@ class OpcUAClient:
             return None
 
     # Подлючение клиентом OPC UA к серверу
-    def connectClient(self):
+    def connectClient(self, toWhichTable):
         try:
             try:
                 self.client = Client(self.pXML['opcserver_master']['opc_host'])
@@ -48,19 +47,22 @@ class OpcUAClient:
                 self.logger.warning("Connect slave server: " + self.pXML['opcserver_master']['opc_host'])
                 return self.client
         except ConnectionRefusedError:
+            Postgres().insertIfNotConnectOpc(toWhichTable)
 
-            time.sleep(60)
-            if self.myTime == 0:
-                self.logger.warning("No connection to server OPC")
+            # time.sleep(60)
+            # if self.myTime == 0:
+            #     self.logger.warning("No connection to server OPC")
 
-            OpcUAClient().connectClient()
-
+            # OpcUAClient().connectClient()
 
     # Берет названия тегов из базы, ищет на сервере OPC считывая их значение и отправляет обратно в базу
     def processPostrgres(self, client, toWhichTable):
         # try:
         for self.tagsElement in Postgres().selectTags():  # ['GD06.UF01UD01.KS01.GCA.CTGA_AVO1.Socket_PLC.Value', '232']
-            self.node = client.get_node('ns=1;s=' + str(self.tagsElement[0]))
+            try:
+                self.node = client.get_node('ns=1;s=' + str(self.tagsElement[0]))
+            except:
+                break
             # print(self.node)
             try:
                 self.listValue[self.tagsElement[1]] = self.get_ua_type(self.node.get_value())
@@ -78,30 +80,31 @@ class OpcUAClient:
         #     Postgres().insertIfNotConnectOpc(toWhichTable)
         #     self.logger.info("Данные записанны с нулевыми значениями")
 
-
     def everyFiveMinutes(self):
-        OpcUAClient().processPostrgres(OpcUAClient().connectClient(), ParserXML().parser()['rate_5_min']['cl_table'])
+        table = ParserXML().parser()['rate_5_min']['cl_table']
+        OpcUAClient().processPostrgres(OpcUAClient().connectClient(table), table)
 
     def everyOneHour(self):
-        OpcUAClient().processPostrgres(OpcUAClient().connectClient(), ParserXML().parser()['rate_1_hour']['cl_table'])
+        table = ParserXML().parser()['rate_1_hour']['cl_table']
+        OpcUAClient().processPostrgres(OpcUAClient().connectClient(table), table)
+
     def everyOneDay(self):
-        OpcUAClient().processPostrgres(OpcUAClient().connectClient(), ParserXML().parser()['rate_1_day']['cl_table'])
+        table = ParserXML().parser()['rate_1_day']['cl_table']
+        OpcUAClient().processPostrgres(OpcUAClient().connectClient(table), table)
 
     def main(self):
         # настройка по расписанию postgres -> opc -> postgres
 
-
         while True:
             if self.myTime % 5 == 0 or self.myTime == 0:
-                OpcUAClient().processPostrgres(OpcUAClient().connectClient(),
-                                               ParserXML().parser()['rate_5_min']['cl_table'])
+                OpcUAClient().everyFiveMinutes()
                 schedule.every(5).minutes.at(':00').do(OpcUAClient().everyFiveMinutes)
 
                 break
             else:
                 self.myTime = int(time.strftime("%M"))
 
-        schedule.every().hour.at(':45').do(OpcUAClient().everyOneHour)
+        schedule.every().hour.at(':15').do(OpcUAClient().everyOneHour)
         schedule.every().day.at("10:00:00").do(OpcUAClient().everyOneDay)
 
         while True:
@@ -109,7 +112,8 @@ class OpcUAClient:
             time.sleep(1)
 
 
-
 if __name__ == '__main__':
     print("Version - 2.2 260922 ")
     OpcUAClient().main()
+
+    # OpcUAClient().everyFiveMinutes()

@@ -60,6 +60,6 @@
 
         <time_zone>Europe/Moscow</time_zone>
         <!-- Место хранение логов -->
-        <path_log_file>info.log</path_log_file>
+        <path_log_file>D:\MyProjects\Job\convertert_opcua_postgres\converter\info.log</path_log_file>
     </ather_setting>
 </config>

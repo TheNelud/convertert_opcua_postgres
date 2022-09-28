@@ -2,7 +2,7 @@ import xml.etree.ElementTree as ET
 
 class ParserXML():
     def __init__(self) :
-        self.tree = ET.parse("config.xml")
+        self.tree = ET.parse("D:\MyProjects\Job\convertert_opcua_postgres\converter\config.xml")
         self.root = self.tree.getroot()
         self.external_result = {}
         
