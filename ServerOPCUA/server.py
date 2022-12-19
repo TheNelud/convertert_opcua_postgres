@@ -14,7 +14,7 @@ class OpcUaServer():
         self.server.set_server_name('Server Emulator Gazprom Auto')
         # self.idx = self.server.register_namespace('Value Emulation param')
         self.node = self.server.get_objects_node()
-        self.array_folder =arrayList.array_nadim
+        self.array_folder =arrayList.array_kovicta
         self.i = -1
 
 
@@ -33,7 +33,7 @@ class OpcUaServer():
 
     def randomValue(self):
         
-        self.myFolderValue = uniform(13.3, 25.4)
+        self.myFolderValue = uniform(1.0, 2.0)
         # self.myFolderValue = choice(['True', 'False'])
         self.myFolder.set_value(self.myFolderValue, ua.VariantType.Float)
 
